@@ -1,3 +1,8 @@
+//<editor-fold defaultstate="collapsed" desc="CODE issues and TODO operations">
+// Write here operations that are missing
+// TODO finish javadoc
+//</editor-fold>
+
 package artexsavior.entities;
 
 import artexsavior.enums.SkillType;
@@ -19,10 +24,15 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JComponent;
 
-/**
- *
- * @author Peixoto
- */
+/** Descrição do Código
+ *******************************************************************************
+ * @classname Entity.java                                                      *
+ * @date     18/04/2014                                                        *   
+ * @authors  Peixoto                                                           *              
+ *                                                                             *   
+ * @description Classe java que define as variáveis básicas de uma entidade    *   
+ *              no jogo, e será herdada pelas entidades específicas.           *
+ *******************************************************************************/
 public class Entity extends JComponent {
     protected int x = 20,
                   y = 20,
@@ -35,31 +45,101 @@ public class Entity extends JComponent {
     protected DamageController damageControl;
     
     protected int movementSpeed = 200;
+
     protected int direction;
+
     protected Direction facingTo;
+
     protected Image entityImage;
+
     protected int index;
+
+    /**
+     *
+     */
     protected ArrayList<Skill> skills;
+
+    /**
+     *
+     */
     protected ArrayList<SkillType> skillTypes;
+
+    /**
+     *
+     */
     protected int delayOfSkill;
+
+    /**
+     *
+     */
     protected int hitPoints = 100;
+
+    /**
+     *
+     */
     protected int numOfBlinks = 0;
-    
-    //<editor-fold defaultstate="collapsed" desc="Booleans">
+
+    /**
+     *
+     */
     protected boolean dead,
-                      canPaint = true, 
-                      blink, 
-                      canRemove, 
-                      canMove = true, 
-                      paused = false, 
-                      active = false;
+ 
+    /**
+     *
+     */
+    canPaint = true,
+
+    /**
+     *
+     */
+    blink,
+ 
+    /**
+     *
+     */
+    canRemove,
+
+    /**
+     *
+     */
+    canMove = true,
+ 
+    /**
+     *
+     */
+    paused = false,
+
+    /**
+     *
+     */
+    active = false;
     //</editor-fold>
 
+    /**
+     *
+     */
     protected Thread movement;
+
+    /**
+     *
+     */
     protected int maxIndex = 3;
     
-    protected int offsetX, offsetY;
+    /**
+     *
+     */
+    protected int offsetX,
 
+    /**
+     *
+     */
+    offsetY;
+
+    /**
+     *
+     * @param type
+     * @param Types
+     */
     public Entity(EntityType type, SkillType[] Types) {
         movesControl = MovesController.newMovesController();
         damageControl = DamageController.newDamageController();
@@ -116,6 +196,12 @@ public class Entity extends JComponent {
 
     }
 
+    /**
+     *
+     * @param type
+     * @param Coord
+     * @return
+     */
     protected Coordinate callWalk(EntityType type, Coordinate Coord) {
         offsetX = (movesControl.getOffsetX()*-1);
         offsetY = (movesControl.getOffsetY()*-1);
@@ -140,6 +226,12 @@ public class Entity extends JComponent {
         }
     }
     
+    /**
+     *
+     * @param skillToPerform
+     * @param x
+     * @param y
+     */
     public void performSkill(SkillType skillToPerform, int x, int y) {
         if(skillTypes.contains(skillToPerform)) {            
             for(int i = 0; i < skillTypes.size(); i++) {
@@ -153,8 +245,12 @@ public class Entity extends JComponent {
                 }
             }
         }    
-    }        
-    
+    }
+
+    /**
+     *
+     * @param skillToPerform
+     */
     public void performSkill(SkillType skillToPerform) {
         if(skillTypes.contains(skillToPerform)) {            
             for(int i = 0; i < skillTypes.size(); i++) {
@@ -172,6 +268,9 @@ public class Entity extends JComponent {
         }    
     }        
 
+    /**
+     *
+     */
     public void die() {
         this.entityImage = Type.getEntityDeathImage(Type);
         this.maxIndex = 2;
@@ -179,39 +278,75 @@ public class Entity extends JComponent {
         dead = true;
     }
     
+    /**
+     *
+     * @param C
+     */
     public void setXY(Coordinate C) {
         x = C.getX();
         y = C.getY();
     }
 
+    /**
+     *
+     * @return
+     */
     public boolean CanMove() {
         return canMove;
     }
 
+    /**
+     *
+     * @param canMove
+     */
     public void setCanMove(boolean canMove) {
         this.canMove = canMove;
     }
 
+    /**
+     *
+     * @return
+     */
     public EntityType getType() {
         return Type;
     }
 
+    /**
+     *
+     * @param Type
+     */
     public void setType(EntityType Type) {
         this.Type = Type;
     }
 
+    /**
+     *
+     * @return
+     */
     public Coordinate getCoord() {
         return new Coordinate(x+offsetX, y+offsetY);
     }
 
+    /**
+     *
+     * @param MoveType
+     */
     public void setMoveType(EntityMoveType MoveType) {
         this.Type.setMoveType(MoveType);
     }
 
+    /**
+     *
+     * @return
+     */
     public boolean canRemove() {
         return canRemove;
     }
     
+    /**
+     *
+     * @return
+     */
     public Wall getWall() {
         return new Wall(x, y, x+width, y+height);
     }
