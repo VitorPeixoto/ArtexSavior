@@ -1,0 +1,47 @@
+@startuml
+annotation java.lang.Override
+class artexsavior.Coordinate
+class artexsavior.Enemy
+class artexsavior.Entity
+class artexsavior.EntityList
+class artexsavior.EntityMap
+class artexsavior.Friend
+class artexsavior.Hero
+class artexsavior.Main
+class artexsavior.MapController
+class artexsavior.MovesController
+class artexsavior.NPC
+class artexsavior.Wall
+class java.awt.Color
+class java.awt.Graphics
+class java.awt.Image
+class java.awt.event.KeyEvent
+class java.awt.event.KeyListener
+class java.util.ArrayList
+class java.util.Collections
+class java.util.logging.Level
+class java.util.logging.Logger
+class javax.swing.JComponent
+class javax.swing.JFrame
+enum artexsavior.EntityMoveType
+enum artexsavior.EntityType
+artexsavior.Enemy --|> artexsavior.Entity
+artexsavior.Entity ..> java.awt.Graphics
+artexsavior.Entity ..> java.awt.Image
+artexsavior.Entity ..> java.util.logging.Level
+artexsavior.Entity ..> java.util.logging.Logger
+artexsavior.Entity --|> javax.swing.JComponent
+artexsavior.EntityList --|> java.util.ArrayList
+artexsavior.EntityMap ..> java.util.ArrayList
+artexsavior.Friend --|> artexsavior.Entity
+artexsavior.Hero ..> java.lang.Override
+artexsavior.Hero --|> artexsavior.Entity
+artexsavior.Hero ..> java.awt.event.KeyEvent
+artexsavior.Hero ..> java.awt.event.KeyListener
+artexsavior.Main ..> javax.swing.JFrame
+artexsavior.MovesController ..> java.awt.event.KeyEvent
+artexsavior.MovesController ..> java.util.ArrayList
+artexsavior.MovesController ..> java.util.Collections
+artexsavior.NPC --|> artexsavior.Entity
+artexsavior.EntityType ..> java.awt.Color
+@enduml
