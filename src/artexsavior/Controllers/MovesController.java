@@ -24,7 +24,7 @@ import java.util.Collections;
  *******************************************************************************/
 
 public class MovesController {
-    //Instância única que será retorna
+    //Instância única que será retornada
     private static volatile MovesController singleMoves = null;
     
     private int offsetX, offsetY;

@@ -1,14 +1,30 @@
+//<editor-fold defaultstate="collapsed" desc="CODE issues and TODO operations">
+// Write here operations that are missing
+//</editor-fold>
+
 package artexsavior;
 
-/**
- *
- * @author Peixoto
- */
+/** Descrição do Código
+ *******************************************************************************
+ * @classname Coordinate.java                                                  *
+ * @date      18/04/2014                                                       *   
+ * @authors   Peixoto                                                          *              
+ *                                                                             *   
+ * @description Classe que representa uma cordenada "X-Y" na tela, usada para  *   
+ *              controlar o posicionamente de objetos e entidades.             *
+ *******************************************************************************/
 
 public class Coordinate {
-    private int x;
-    private int y;
-       
+    private int x;    // Valor "X" da cordenada  
+    private int y;    // Valor "Y" da cordenada
+
+    /**
+     * Construtor of Coordinate class
+     * Construtor that generates an object that controls and coordinate on 
+     * screen
+     * @param x the "X" value of the Coordinate
+     * @param y the "Y" value of the Coordinate
+     */
     public Coordinate(int x, int y) {
         this.x = x;
         this.y = y;
@@ -31,7 +47,8 @@ public class Coordinate {
     }
 
     /**
-     * Setter of this Coordinate from new x and y values
+     * Setter of this Coordinate
+     * Sets the coordinate from new x and y values
      * @param x the new "X" value of the coordinate
      * @param y the new "Y" value of the coordinate
      */
@@ -41,10 +58,12 @@ public class Coordinate {
     }
 
     /**
-     * Getter of an String value of the coordinate
+     * toString() of Coordinate
+     * Gets an String value of the coordinate
      * @return String on format "(X, Y)"  
      */
-    public String getCoord() {
+    @Override
+    public String toString() {
         return (new StringBuilder()).append("").append(x).append(",").append(y).toString();
     }
 

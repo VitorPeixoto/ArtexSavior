@@ -1,29 +1,87 @@
+//<editor-fold defaultstate="collapsed" desc="CODE issues and TODO operations">
+// Write here operations that are missing
+//</editor-fold>
+
 package artexsavior.enums;
 
 import artexsavior.Coordinate;
 
-/**
- *
- * @author Peixoto
- */
+/** Descrição do Código
+ *******************************************************************************
+ * @enumname Direction.java                                                    *
+ * @date     18/04/2014                                                        *   
+ * @authors  Peixoto                                                           *              
+ *                                                                             *   
+ * @description Enum que contem constantes relacionadas às direções cardeais e *   
+ *              colaterais, usado para definir direções de movimentos e faces. *
+ *******************************************************************************/
 
 public enum Direction {
-    NORTH(0),      // Para o norte
-    NORTHWEST(1),  // Para o noroeste
-    NORTHEAST(2),  // Para o nordeste
-    WEST(3),       // Para o oeste
-    SOUTHWEST(4),  // Para o sudoeste
-    SOUTHEAST(5),  // Para o sudeste
-    SOUTH(6),      // Para o sul
-    EAST(7);       // Para o leste
+    /**
+     * Direction North 
+     * Norte
+     */
+    NORTH(0),
     
+    /**
+     * Direction Northwest
+     * Noroeste
+     */
+    NORTHWEST(1),
     
-    Direction(int direction) {
+    /**
+     * Direction Northeast
+     * Nordeste
+     */
+    NORTHEAST(2),
+
+    /**
+     * Direction West
+     * Oeste
+     */
+    WEST(3),
+
+    /**
+     * Direction Southwest
+     * Sudoeste
+     */
+    SOUTHWEST(4),
+
+    /**
+     * Direction Southeast
+     * Sudeste
+     */
+     SOUTHEAST(5),
+
+    /**
+     * Direction South
+     * Sul
+     */
+    SOUTH(6),
+
+    /**
+     * Direction East
+     * Leste
+     */
+    EAST(7);
+    
+    /**
+     * Constructor of Direction enum
+     * Private constructor of an constant Direction enum item used to control
+     * the cardinal and collateral directions.
+     * @param direction the id of the direction
+     */
+    private Direction(int direction) {
         this.id = direction;
     }
     
     private final int id;
     
+    /**
+     * Getter of id
+     * Method that return the id of the current Direction
+     * @return id the id of the current Direction
+     */
     public int integer() {
         switch(this) {
             case NORTH:
@@ -46,8 +104,14 @@ public enum Direction {
                 return -1;
         }
     }
-    
-      public static Direction getDirection(int integerDirection) {
+
+    /**
+     * Getter of Direction
+     * Static method that return an Direction based on an received id
+     * @param integerDirection the integer id of the Direction
+     * @return the Direction with the integerDirection id
+     */
+    public static Direction getDirection(int integerDirection) {
         switch(integerDirection) {
             case 0:
                 return NORTH;
@@ -70,44 +134,62 @@ public enum Direction {
         }
     }
       
-    public Coordinate getCoordinatePlus(Coordinate actual, int toAdd) {
+    /**
+     * Coordinate method getCoordinatePlus
+     * Method that return an Coordinate based on actual direction and integer 
+     * value to add
+     * @param actualCoordinate the actual coordinate of the entity
+     * @param toAdd the value to add on the coordinate
+     * @return the new coordinate with the new "X" or "Y" value changed
+     */
+    public Coordinate getCoordinatePlus(Coordinate actualCoordinate, int toAdd) {
         switch(this) {
             case NORTH:
-                return new Coordinate(actual.getX(), actual.getY()-toAdd);
+                return new Coordinate(actualCoordinate.getX(), actualCoordinate.getY()-toAdd);
             case NORTHWEST:
-                return new Coordinate(actual.getX()-(toAdd/2), actual.getY()-(toAdd/2));
+                return new Coordinate(actualCoordinate.getX()-(toAdd/2), actualCoordinate.getY()-(toAdd/2));
             case NORTHEAST:    
-                return new Coordinate(actual.getX()+(toAdd/2), actual.getY()-(toAdd/2));
+                return new Coordinate(actualCoordinate.getX()+(toAdd/2), actualCoordinate.getY()-(toAdd/2));
             case WEST:
-                return new Coordinate(actual.getX()-toAdd, actual.getY());
+                return new Coordinate(actualCoordinate.getX()-toAdd, actualCoordinate.getY());
             case SOUTHWEST:
-                return new Coordinate(actual.getX()-(toAdd/2), actual.getY()+(toAdd/2));
+                return new Coordinate(actualCoordinate.getX()-(toAdd/2), actualCoordinate.getY()+(toAdd/2));
             case SOUTHEAST:    
-                return new Coordinate(actual.getX()+(toAdd/2), actual.getY()+(toAdd/2));
+                return new Coordinate(actualCoordinate.getX()+(toAdd/2), actualCoordinate.getY()+(toAdd/2));
             case SOUTH:
-                return new Coordinate(actual.getX(), actual.getY()+ toAdd);
+                return new Coordinate(actualCoordinate.getX(), actualCoordinate.getY()+ toAdd);
             case EAST:
-                return new Coordinate(actual.getX()+toAdd, actual.getY());
+                return new Coordinate(actualCoordinate.getX()+toAdd, actualCoordinate.getY());
             default:
                 return null;
         }
     }
-    
-    
+
+    /**
+     * Direction Method addDirection
+     * Method that receive an Direction and try to add to this Direction.
+     * If both are cardinal directions, return an collateral direction.
+     * @param toAdd the Direction to add
+     * @return a new Direction created by the sum of both Directions
+     */
     public Direction addDirection(Direction toAdd) {
         switch(this) {
             case NORTH:
                 if(toAdd.equals(Direction.EAST)) return NORTHEAST;
                 else if(toAdd.equals(Direction.WEST)) return NORTHWEST;
+                break;
             case SOUTH:
                 if(toAdd.equals(Direction.EAST)) return SOUTHEAST;
                 else if(toAdd.equals(Direction.WEST)) return SOUTHWEST;                
+                break;
             case EAST:
                 if(toAdd.equals(Direction.NORTH)) return NORTHEAST;
                 else if(toAdd.equals(Direction.SOUTH)) return SOUTHEAST;    
+                break;
             case WEST:
                 if(toAdd.equals(Direction.NORTH)) return NORTHWEST;
                 else if(toAdd.equals(Direction.SOUTH)) return SOUTHWEST;    
+                break;
         }
         return this;
     }

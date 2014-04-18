@@ -1,3 +1,7 @@
+//<editor-fold defaultstate="collapsed" desc="CODE issues and TODO operations">
+// Write here operations that are missing
+//</editor-fold>
+
 package artexsavior;
 
 import java.awt.Image;
@@ -21,8 +25,10 @@ public class Area {
                  rightArea;       //Reference for the right area on Map
 
     /**
-     *
-     * @param Area
+     * Constructor of class Area
+     * Constructor of an Area object that will be used to define areas on game
+     * and control their distribution
+     * @param Area the integer value of the area to create
      */
     public Area(int Area) {
         this.numberOf = Area;
@@ -77,6 +83,5 @@ public class Area {
     public Image getImage(char wichType) {
         return (new javax.swing.ImageIcon(getClass().getResource("/Areas/"+numberOf+"/"+wichType+numberOf+".png"))).getImage();
     }
-       
-    
+           
 }

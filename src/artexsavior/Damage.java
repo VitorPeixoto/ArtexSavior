@@ -1,19 +1,31 @@
+//<editor-fold defaultstate="collapsed" desc="CODE issues and TODO operations">
+// Write here operations that are missing
+//</editor-fold>
+
 package artexsavior;
 
 import artexsavior.enums.EntityType;
 
-/**
- *
- * @author Peixoto
- */
+/** Descrição do Código
+ *******************************************************************************
+ * @classname Damage.java                                                      *
+ * @date      18/04/2014                                                       *   
+ * @authors   Peixoto                                                          *              
+ *                                                                             *   
+ * @description Classe que representa um dano que está ocorrendo na area atual,*   
+ *              definindo sua localização, seu valor e seus alvos.             *
+ *******************************************************************************/
 
 public class Damage {
-    private final int damage;
-    private final Coordinate initialCoordinate, finalCoordinate;
+    private final int damage; //Valor do dano
+    private final Coordinate initialCoordinate, //Coordenada do início do dano
+                             finalCoordinate;   //Coordenada do final do dano
     
-    private final EntityType typeOfWhoPerformed;
+    private final EntityType typeOfWhoPerformed; //O tipo de Entidade que provocou
+                                                 //tal dano
     
     /**
+     * Constructor of Damage class
      * Constructor of an Damage object that will be used to control the damage
      * taken and the damage dealt by entities on game
      * @param damage the integer value of the damage
@@ -53,6 +65,7 @@ public class Damage {
     }
     
     /**
+     * Boolean funcion willHurt
      * Function that receive the coordinate of an entity and his type, 
      * and checks if it can be and if it will be hurt by this damage
      * @param entityCoordinate the coordinate of the entity

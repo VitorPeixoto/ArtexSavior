@@ -14,6 +14,13 @@
         <group>
             <file>file:/home/Peixoto/NetBeansProjects/ArtexSavior/ArtexSaviorUML.puml</file>
         </group>
-        <group name="CEFET"/>
+        <group name="CEFET">
+            <file>file:/home/Peixoto/NetBeansProjects/ArtexSavior/src/artexsavior/Controllers/MapController.java</file>
+            <file>file:/home/Peixoto/NetBeansProjects/ArtexSavior/src/artexsavior/Controllers/DamageController.java</file>
+            <file>file:/home/Peixoto/NetBeansProjects/ArtexSavior/src/artexsavior/Controllers/MovesController.java</file>
+            <file>file:/home/Peixoto/NetBeansProjects/ArtexSavior/src/artexsavior/Damage.java</file>
+            <file>file:/home/Peixoto/NetBeansProjects/ArtexSavior/src/artexsavior/Area.java</file>
+            <file>file:/home/Peixoto/NetBeansProjects/ArtexSavior/src/artexsavior/BackgroundPanel.java</file>
+        </group>
     </open-files>
 </project-private>

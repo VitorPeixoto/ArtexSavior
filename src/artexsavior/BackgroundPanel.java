@@ -1,3 +1,7 @@
+//<editor-fold defaultstate="collapsed" desc="CODE issues and TODO operations">
+// Write here operations that are missing
+//</editor-fold>
+
 package artexsavior;
 
 import java.awt.Graphics;
@@ -6,24 +10,35 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JPanel;
 
-/**
- *
- * @author Peixoto
- */
-public class BackgroundPanel extends JPanel {
+/** Descrição do Código
+ *******************************************************************************
+ * @classname BackgroundPanel.java                                             *
+ * @date      18/04/2014                                                       *   
+ * @authors   Peixoto                                                          *              
+ *                                                                             *   
+ * @description Classe que controla a pintura das imagens de fundo na tela.    *   
+ *              Extende javax.swing.JPanel, de modo a ser um componente a ser  *  
+ *              adicionado ao frame.                                           *
+ *******************************************************************************/
+
+public class BackgroundPanel extends JPanel {    
+    private Image backgroundImage;  //Imagem referente ao fundo da área atual
     
-    private Image backgroundImage;
+    private final int width;        //Comprimento do painel
+    private final int height;       //Altura do painel 
     
-    private final int width;
-    private final int height;
+    private int offsetX;            // Offsets X e Y da imagem, que é maior que o     
+    private int offsetY;            // painel. Utilizados para pintar diferentes 
+                                    // partes da imagem.
     
-    private int offsetX;    
-    private int offsetY;
-    private Thread atualize;
+    private final Thread atualize;  // Thread que cuida da atualização das
+                                    // informações do painel, atualizando a pintura
+                                    // com o repaint();    
     
     /**
-     * Constructor that generate an object that will control the painting of the 
-     * background image
+     * Constructor of BackdroundPanel class
+     * Construtor that generate an object that will control the painting of the 
+     * background image on the screen
      * @param backgroundImage area image to paint on background
      * @param width width if the container
      * @param height height if the container
@@ -39,8 +54,8 @@ public class BackgroundPanel extends JPanel {
             public void run() {
                 while(true) {
                     try {
-                        repaint();
-                        Thread.sleep(1000);
+                        repaint();  //Atualiza a pintura
+                        Thread.sleep(1000); //Espera um pouco
                     } catch (InterruptedException ex) {
                         Logger.getLogger(BackgroundPanel.class.getName()).log(Level.SEVERE, null, ex);
                     }
@@ -52,12 +67,12 @@ public class BackgroundPanel extends JPanel {
 
    @Override
    public void paintComponent(Graphics g) {
-//       System.out.println("OFFX: "+offsetX+"\nOFFY: "+offsetY+"\n\n");
        g.drawImage(backgroundImage, 0, 0, width, height, offsetX, offsetY, (width+offsetX), (height+offsetY), null);
    }    
     
     
     /**
+     * Setter of offsetY
      * Set the value of the "Y" offset of the image that will controll the map
      * piece that will be painted
      * 
@@ -68,6 +83,7 @@ public class BackgroundPanel extends JPanel {
     }
 
     /**
+     * Setter of offsetX
      * Set the value of the "X" offset of the image that will controll the map
      * piece that will be painted
      *
@@ -77,18 +93,31 @@ public class BackgroundPanel extends JPanel {
         this.offsetX = offsetX;
     }
     
-
+    /**
+     * Getter of offsetX
+     * Get the value of the "X" offset of the image to controll the map
+     * piece that will be painted
+     *
+     * @return the "X" offset
+     */
     public int getOffsetX() {
         return offsetX;
     }
 
+     /**
+     * Getter of offsetY
+     * Get the value of the "Y" offset of the image to controll the map
+     * piece that will be painted
+     *
+     * @return the "Y" offset
+     */
     public int getOffsetY() {
         return offsetY;
     }        
 
     /**
      * Getter of backgroundImage
-     *
+     * Return the Image of the actual area
      * @return the background image that is being painted
      */
     public Image getBackgroundImage() {
@@ -97,7 +126,7 @@ public class BackgroundPanel extends JPanel {
 
     /**
      * Setter of backgroundImage
-     *
+     * Set the Image of the actual area
      * @param backgroundImage new background image to be painted
      */
     public void setBackgroundImage(Image backgroundImage) {
