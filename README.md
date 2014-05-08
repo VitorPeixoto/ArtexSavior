@@ -7,3 +7,4 @@ Artex Savior is an role-playing based game that is being developed since march 2
 
 Autors:
   Vítor Peixoto	
+  Lucas Santos Pimenta Junior
