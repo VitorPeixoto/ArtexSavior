@@ -1,4 +1,4 @@
-//<editor-fold defaultstate="collapsed" desc="CODE issues and TODO operations">
+//<editor-fold defaultstate="collapsed" desc="CODE issues and "to do" operations">
 // Write here operations that are missing
 // TODO define more Skills and features
 //</editor-fold>
@@ -29,7 +29,7 @@ public class Enemy extends Entity {
     
     /**
      * Construtor of Enemy class
-     * Constructor of an Enemy object, builds an Enemy.
+     * Construtor of an Enemy object, builds an Enemy.
      */
     public Enemy() {
         super(EntityType.ENEMY, new SkillType[] {SkillType.FIRE_SKILL});

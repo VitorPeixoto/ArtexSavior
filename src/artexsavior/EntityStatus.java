@@ -1,11 +1,12 @@
 package artexsavior;
 
 /**
- *
+ * Ignore this class
+ * class in construction
  * @author Peixoto
  */
 
-public class entityStatus {
+public class EntityStatus {
     private int HitPoints;
     private int ManaPoints;
     private int YingPoints;

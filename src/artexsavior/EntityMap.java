@@ -1,3 +1,7 @@
+//<editor-fold defaultstate="collapsed" desc="CODE issues and "to do" operations">
+// Write here operations that are missing
+//</editor-fold>
+
 package artexsavior;
 
 import artexsavior.entities.Entity;
@@ -23,18 +27,18 @@ import java.util.logging.Logger;
  * @warning     TODA ENTIDADE DEVE SER CRIADA USANDO A INSTÂNCIA "singleMap",  *  
  *              OBTIDA ATRAVÉS DO MÉTODO ESTATICO "newEntityMap()"             *
  *******************************************************************************/
-
+        
 public class EntityMap {
-    //Instância única que será retornada
-    private static volatile EntityMap singleMap = null;
-
-    // Lista/Controlador de entidades 
-    private final EntityList Entities;
+    //Single instance that will be returned
+    private static volatile EntityMap singleMap = null;                
     
-    //Thread que cuidará da limpeza de Entidades no caso de mortes ou outras 
-    //necessidades de remoção
+    //Entity list/controller
+    private final EntityList Entities;        
+    
+    //Thread that will clean the dead entities or entities that needs 
+    //to be removed
     private final Thread cleanList = new Thread(new Runnable(){
-
+        
         @Override
         public void run() {
             try {
@@ -53,7 +57,7 @@ public class EntityMap {
     });
     
 
-    //Método estatico que retornará a instância unica
+    //Static method that will return the single instance
     public static EntityMap newEntityMap() {
         if(singleMap == null) {
             singleMap = new EntityMap();
@@ -61,22 +65,18 @@ public class EntityMap {
         return singleMap;
     }
 
-    //Construtor privado que só será chamado uma vez
+    //Private constructor that will be called once
     private EntityMap() {
-        //Inicia "Entities" à partir de instância única
-        //(EntityList também é Singleton)
         Entities = EntityList.newEntityList();     
         cleanList.start();
     }
     
-    //<editor-fold defaultstate="collapsed" desc="Descrição do método">
-    
-    /************************************************************************ 
-     *   Método que recebe uma coordenada e retorna a coordenada            *
-     *   da unidade mais próxima.                                           *
-     ************************************************************************/
-    
-    //</editor-fold>    
+    /** Coordinate method getCloserEntity
+     * Method that receives an Coordinate and search in the EntityList the entity that
+     * is closer to this position
+     * @param Coord The coordinate to search
+     * @return the coordinate of the closer entity
+     */
     public Coordinate getCloserEntity(Coordinate Coord) {
         int index = -1;
         int modulox, moduloy, modulo = 0;
@@ -96,15 +96,15 @@ public class EntityMap {
         if(index < 0) return Coord;
         return Entities.get(index).getCoord();
     }
-
-    //<editor-fold defaultstate="collapsed" desc="Descrição do método">
-    
-    /************************************************************************ 
-     *   Método que recebe uma coordenada e um tipo de entidade e           *
-     *   retorna a coordenada da unidade desse tipo mais próxima.           *
-     ************************************************************************/ 
-    
-    //</editor-fold>
+  
+    /** Coordinate method getCloserEntityOfType
+     * Method that receive an Coordinate and an EntityType, and search in the 
+     * EntityList the Entity of this EntityType that is closer to the received 
+     * Coordinate
+     * @param Type the EntityType to search
+     * @param Coord the Coordinate to verify
+     * @return the Coordinate of the closer Entity of EntityType
+     */
     public Coordinate getCloserEntityOfType(EntityType Type, Coordinate Coord) {
         int index = 0;
         int modulox, moduloy, modulo = 0;
@@ -124,23 +124,23 @@ public class EntityMap {
 
         return Entities.get(index).getCoord();
     }
-    
-    //<editor-fold defaultstate="collapsed" desc="Descrição do método">
-    
-    /************************************************************************  
-     *   Método que recebe uma coordenada e um tipo de entidade e           *
-     *   retorna a coordenada da unidade oposta à esse tipo mais próxima    *
-     *   EXEMPLO: Type   = EntityType.HERO                                  *
-     *            Oposta = EntityType.ENEMY.                                 *
-     ************************************************************************/
-    
-    //</editor-fold>
+
+    /** Coordinate method getCloserOpposeEntity
+     * Method that receive an Coordinate and an EntityType, and search in the 
+     * EntityList the Entity that opposes this EntityType and that is closer to
+     * the received Coordinate
+     * -> HERO opposes ENEMY
+     * -> FRIEND opposes ENEMY...
+     * @param Type the EntityType to get oppose EntityType
+     * @param Coord the Coordinate to verify
+     * @return the Coordinate of the closer Entity oppose of EntityType
+     */    
     public Coordinate getCloserOpposeEntity(EntityType Type, Coordinate Coord) {
         int index = -1;
         int modulox, moduloy, modulo = 0;
 
         for (int i = 0; i < Entities.size(); i++) {
-            // Verifica se são opostas
+            // Verify if opposes
             if(Entities.get(i).getType().opposes(Type, Entities.get(i).getType())){
                 modulox = this.getModuloX(Coord, Entities.get(i).getCoord());
                 moduloy = this.getModuloY(Coord, Entities.get(i).getCoord());
@@ -155,23 +155,23 @@ public class EntityMap {
         if(index < 0)return null;
         return Entities.get(index).getCoord();
     }
-    
-    //<editor-fold defaultstate="collapsed" desc="Descrição do método">
-    
-    /************************************************************************ 
-     *   Método que recebe uma coordenada e um tipo de entidade e           *
-     *   retorna a coordenada da unidade amiga desse tipo mais próxima      *
-     *   EXEMPLO: Type  = EntityType.HERO                                   *
-     *            Amiga = EntityType.FRIEND.                                *
-     ************************************************************************/         
-    
-    //</editor-fold>
+     
+    /** Coordinate method getCloserFriendEntity
+     * Method that receive an Coordinate and an EntityType, and search in the 
+     * EntityList the Entity that is a friend of this EntityType and that is 
+     * closer to the received Coordinate
+     * -> FRIEND is friend of HERO
+     * -> HERO is friend of NPC...
+     * @param Type the EntityType to get friendly EntityType
+     * @param Coord the Coordinate to verify
+     * @return the Coordinate of the closer Entity fried of EntityType
+     */        
     public Coordinate getCloserFriendEntity(EntityType Type, Coordinate Coord) {
         int index = 0;
         int modulox, moduloy, modulo = 0;
 
         for (int i = 0; i < Entities.size(); i++) {
-            // Verifica se são amigas
+            // Verify if they are friends
             if(Entities.get(i).getType().friends(Type, Entities.get(i).getType())){
                 modulox = this.getModuloX(Coord, Entities.get(i).getCoord());
                 moduloy = this.getModuloY(Coord, Entities.get(i).getCoord());
@@ -185,23 +185,21 @@ public class EntityMap {
 
         return Entities.get(index).getCoord();
     }
-
-    //<editor-fold defaultstate="collapsed" desc="Descrição do método">
     
-    /**************************************************************************
-     *   Método que recebe uma coordenada e um tipo de entidade e             *
-     *   retorna a coordenada da unidade diferente desse tipo mais próxima    *
-     *   EXEMPLO: Type      = EntityType.HERO                                 * 
-     *   Diferente = EntityType.ENEMY || EntityType.NPC || EntityType.FRIEND. * 
-     **************************************************************************/
-    
-    //</editor-fold>
+    /** Coordinate method getCloserDifferentEntity
+     * Method that receive an Coordinate and an EntityType, and search in the 
+     * EntityList the Entity that is different from this EntityType and that is 
+     * closer to the received Coordinate
+     * @param Type the EntityType to get different EntityType
+     * @param Coord the Coordinate to verify
+     * @return the Coordinate of the closer different Entity of EntityType
+     */            
     public Coordinate getCloserDifferentEntity(EntityType Type, Coordinate Coord) {
         int index = 0;
         int modulox, moduloy, modulo = 0;
 
         for (int i = 0; i < Entities.size(); i++) {
-            // Verifica se são diferentes
+            // Verify if they are different
             if(Entities.get(i).getType().differents(Type, Entities.get(i).getType())){
                 modulox = this.getModuloX(Coord, Entities.get(i).getCoord());
                 moduloy = this.getModuloY(Coord, Entities.get(i).getCoord());
@@ -216,45 +214,38 @@ public class EntityMap {
         return Entities.get(index).getCoord();
     }
 
-    //<editor-fold defaultstate="collapsed" desc="Descrição do método">
-    
-    /************************************************************************ 
-     *   Método que recebe duas coordenadas diferentes e retorna o módulo   *
-     *   da distância X entre elas, utilizado para escolher qual movimento  *
-     *   a entidade irá fazer.                                              *
-     ************************************************************************/
-        
-    //</editor-fold>
+    /** Private Integer method getModuloX
+     * Method that receive two different Coordinates and returns the "X" distance 
+     * betwen them. That will help to choose what move the Entity will do
+     * @param Entity the Entity Coordinate
+     * @param closerEntity the closer Entity Coordinate
+     * @return an integer value corresponding to the "X" distance betwen both Coordinates
+     */
     private int getModuloX(Coordinate Entity, Coordinate closerEntity) {
         int modulo = Entity.getX() - closerEntity.getX();
         return (modulo >= 0 ? modulo : (modulo*-1));
     }
 
-    //<editor-fold defaultstate="collapsed" desc="Descrição do método">
-    
-    /************************************************************************ 
-     *   Método que recebe duas coordenadas diferentes e retorna o módulo   *
-     *   da distância Y entre elas, utilizado para escolher qual movimento  *
-     *   a entidade irá fazer.                                              *
-     ************************************************************************/    
-    
-    //</editor-fold>    
+    /** Private Integer method getModuloY
+     * Method that receive two different Coordinates and returns the "Y" distance 
+     * betwen them. That will help to choose what move the Entity will do
+     * @param Entity the Entity Coordinate
+     * @param closerEntity the closer Entity Coordinate
+     * @return an integer value corresponding to the "Y" distance betwen both Coordinates
+     */    
     private int getModuloY(Coordinate Entity, Coordinate closerEntity) {
         int modulo = Entity.getY() - closerEntity.getY();
         return (modulo >= 0 ? modulo : (modulo*-1));
     }
-
-    //<editor-fold defaultstate="collapsed" desc="Descrição do método">
-    
-    /************************************************************************ 
-     *   Método que recebe um tipo de entidade e retorna uma entidade do    *
-     *   tipo, que depois passará por um cast para a classe correta         *
-     *   DEVE SER UTILIZADO NA CRIAÇÃO DE QUALQUER ENTIDADE.                *
-     *   @param Type: Tipo da entidade                                      *
-     *   @return Entidade mais próxima                                      *
-     ************************************************************************/
-        
-    //</editor-fold>    
+ 
+    /** Entity method newEntity
+     *  Method that receive an EntityType and create an Entity based on it.
+     *  Returns an Entity, so after the call, an cast must be done to the right
+     *  class. 
+     * @warning THIS METHOD MUST BE USED TO CREATE ALL ENTITIES!
+     * @param Type the EntityType of the Entity
+     * @return an Entity of the EntityType
+     */
     public Entity newEntity(EntityType Type) {
         switch(Type) {
             case HERO:
@@ -277,8 +268,13 @@ public class EntityMap {
                 return null;
         }
     }
-
+    
+    /** Getter of Entities
+     * 
+     * @return the ArrayList of Entities
+     */
     public ArrayList<Entity> getEntityList() {
         return Entities;
-    }
+    }           
+
 }

@@ -1,6 +1,12 @@
-//<editor-fold defaultstate="collapsed" desc="CODE issues and TODO operations">
+//<editor-fold defaultstate="collapsed" desc="CODE issues and "to do" operations">
 // Write here operations that are missing
-// TODO finish javadoc
+// TODO solve problems with walls {Entities can be at the same position at the same time,
+//                                 Entities can move through walls}
+
+// TODO solve problems with facing directions {Entities look to unespected Directions}
+
+// TODO solve problems with perform skills {Entity can move while perform an skill,
+//                                          Time to wait while performing an skill} 
 //</editor-fold>
 
 package artexsavior.entities;
@@ -33,126 +39,83 @@ import javax.swing.JComponent;
  * @description Classe java que define as variáveis básicas de uma entidade    *   
  *              no jogo, e será herdada pelas entidades específicas.           *
  *******************************************************************************/
-public class Entity extends JComponent {
-    protected int x = 20,
-                  y = 20,
-                  height = 32,
-                  width = 30;
+
+public abstract class Entity extends JComponent {
+    protected int x = 20,      //The "X" position on the map
+                  y = 20,      //The "Y" position on the map
+                  height = 32, //The image height
+                  width = 30;  //The image width
     
-    protected EntityType Type;
+    protected EntityType Type; //The type of the entity
     
+    //Controllers of the entity moves, the damage taken and the walls on game
     protected MovesController movesControl;
     protected DamageController damageControl;
+    protected WallController wallControl;
     
     protected int movementSpeed = 200;
 
-    protected int direction;
-
+    //Direction that the entity is looking at
     protected Direction facingTo;
 
+    //The sprite image of the Entity
     protected Image entityImage;
 
-    protected int index;
+    //The current variable move index of the entity
+    protected int moveIndex;
 
-    /**
-     *
-     */
-    protected ArrayList<Skill> skills;
-
-    /**
-     *
-     */
+    //An ArrayList containing all Skills that this Entity can cast
     protected ArrayList<SkillType> skillTypes;
 
-    /**
-     *
-     */
-    protected int delayOfSkill;
-
-    /**
-     *
-     */
+    //The entity's Life
     protected int hitPoints = 100;
 
-    /**
-     *
-     */
+    //Used when the entity dies
     protected int numOfBlinks = 0;
 
-    /**
-     *
-     */
+    //Defines when the entity is alive (hitPoints > 0)
     protected boolean dead,
+    
+    //Used when the entity dies
+                      blink,
  
-    /**
-     *
-     */
-    canPaint = true,
-
-    /**
-     *
-     */
-    blink,
- 
-    /**
-     *
-     */
-    canRemove,
-
-    /**
-     *
-     */
-    canMove = true,
- 
-    /**
-     *
-     */
-    paused = false,
-
-    /**
-     *
-     */
-    active = false;
+    //Active after the death sprite is over        
+                      canRemove,
+    //Defines when the entity can walk, by default true            
+                      canMove = true,
+    //Active when the game pauses
+                      paused = false;
     //</editor-fold>
 
-    /**
-     *
-     */
+    //Thread that controls the movement and changes of the entity
     protected Thread movement;
 
-    /**
-     *
-     */
-    protected int maxIndex = 3;
+    //The max movement index of the sprite
+    protected int maxMoveIndex = 3;
     
-    /**
-     *
-     */
+    //The "X" offset on the map
     protected int offsetX,
+    //The "Y" offset on the map
+                  offsetY;
 
     /**
-     *
-     */
-    offsetY;
-
-    /**
-     *
-     * @param type
-     * @param Types
+     * Construtor of Entity class
+     * Construtor of an Entity object, creates an new variable Entity
+     * @param type The type of the entity that will be created
+     * @param Types An array of skills that the entity can perform
      */
     public Entity(EntityType type, SkillType[] Types) {
         movesControl = MovesController.newMovesController();
         damageControl = DamageController.newDamageController();
+        wallControl = WallController.newWallController();
         
         this.Type = type;
         this.facingTo = Direction.EAST;
+        wallControl.addWall(this.getWall());
         
-        skills = new ArrayList<>();
         skillTypes = new ArrayList<>();
         
-        if(Types != null) Collections.addAll(skillTypes, Types);
-        
-        WallController.newWallController().addWall(this.getWall());
+        if(Types != null) Collections.addAll(skillTypes, Types);               
         
         this.movement = new Thread(new Runnable() {
             
@@ -164,8 +127,10 @@ public class Entity extends JComponent {
                             synchronized (Entity.this) {
                                 if(!dead) {
                                     if(canMove) {
+                                        //wallControl.removeWall(Entity.this.getWall());
                                         walk(callWalk(Type, new Coordinate(x, y)));
-                                        if(++index >= maxIndex) index = 0;
+                                        //wallControl.addWall(Entity.this.getWall());
+                                        if(++moveIndex >= maxMoveIndex) moveIndex = 0;
                                     }
                                     facingTo = movesControl.getDirection();
                                     hitPoints -= damageControl.requestDamage(new Coordinate(x, y), Type);
@@ -180,7 +145,7 @@ public class Entity extends JComponent {
                                                             
                         }
                         else {
-                            index = (maxIndex-1);
+                            moveIndex = (maxMoveIndex-1);
                             blink = !blink; 
                             numOfBlinks++;
                         }
@@ -197,29 +162,38 @@ public class Entity extends JComponent {
     }
 
     /**
-     *
-     * @param type
-     * @param Coord
-     * @return
+     * Coordinate method callWalk
+     * Method that perform some changes and so calls the MovesController 
+     * method walk
+     * 
+     * @param type The type of the entity
+     * @param Coord The actual Coordinate of the entity
+     * @return an new Coordinate based on the response of movesControl
      */
     protected Coordinate callWalk(EntityType type, Coordinate Coord) {
         offsetX = (movesControl.getOffsetX()*-1);
         offsetY = (movesControl.getOffsetY()*-1);
         return movesControl.walk(Type, new Coordinate(x, y));
     }
-
+    
+    /**
+     * Void method walk
+     * Method that changes the "X" and "Y" values of this entity based on 
+     * an received Coordinate
+     * @param walk The coordinate with the values
+     */
     private void walk(Coordinate walk) {
         x = walk.getX();
         y = walk.getY();
     }
     
     @Override
-    public void paintComponent(Graphics g) {
+    public void paintComponent(Graphics g) {        
         if(!dead)
-            g.drawImage(this.entityImage, x+offsetX, y+offsetY, x+offsetX+width, y+offsetY+height, (this.index*width), ((this.facingTo.integer()*height)), ((this.index*width)+width), ((this.facingTo.integer()*height)+height), this);
+            g.drawImage(this.entityImage, x+offsetX, y+offsetY, x+offsetX+width, y+offsetY+height, (this.moveIndex*width), ((this.facingTo.integer()*height)), ((this.moveIndex*width)+width), ((this.facingTo.integer()*height)+height), this);
         else if(numOfBlinks < 10){ //FIXME
             if(blink)
-                g.drawImage(this.entityImage, x+offsetX, y+offsetY, x+offsetX+width, y+offsetY+height, (this.index*32), (0), ((this.index*32)+32), (height), this);
+                g.drawImage(this.entityImage, x+offsetX, y+offsetY, x+offsetX+width, y+offsetY+height, (this.moveIndex*32), (0), ((this.moveIndex*32)+32), (height), this);
         }            
         else {
             canRemove = true;
@@ -227,10 +201,12 @@ public class Entity extends JComponent {
     }
     
     /**
-     *
-     * @param skillToPerform
-     * @param x
-     * @param y
+     * Void method performSkill
+     * Method that receive the necessary information and performs an Skill on 
+     * the screen at the received "X-Y" position
+     * @param skillToPerform The type of the skill that will be cast
+     * @param x The "X" position to perform the skill
+     * @param y The "Y" position to perform the skill
      */
     public void performSkill(SkillType skillToPerform, int x, int y) {
         if(skillTypes.contains(skillToPerform)) {            
@@ -248,8 +224,9 @@ public class Entity extends JComponent {
     }
 
     /**
-     *
-     * @param skillToPerform
+     * Void method performSkill
+     * Method that performs an Skill on the current entity position
+     * @param skillToPerform The type of the skill that will be cast
      */
     public void performSkill(SkillType skillToPerform) {
         if(skillTypes.contains(skillToPerform)) {            
@@ -259,7 +236,6 @@ public class Entity extends JComponent {
                         //canMove = false;
                         Coordinate skillCoord = facingTo.getCoordinatePlus(new Coordinate(x, y), 100);
                         performSkill(skillToPerform, skillCoord.getX()-(width/2), skillCoord.getY()-(height/2));
-                        //SkillController.newSkillController().paintSkill(new Skill(skillToPerform, x, y));
                         //delayOfSkill = SkillController.newSkillController().getTimeToWait(skillToPerform);
                         skillTypes.get(i).cast();
                     }    
@@ -268,36 +244,37 @@ public class Entity extends JComponent {
         }    
     }        
 
-    /**
-     *
+    /** Void method die
+     *  Method that perform necessary checks and changes before an entity 
+     *  can die.
      */
     public void die() {
         this.entityImage = Type.getEntityDeathImage(Type);
-        this.maxIndex = 2;
+        this.maxMoveIndex = 2;
         this.movementSpeed *= 3;
         dead = true;
     }
     
-    /**
-     *
-     * @param C
+    /** Void method setXY
+     * Setter of x y
+     * @param C an Coordinate with the "X-Y" values to change
      */
     public void setXY(Coordinate C) {
         x = C.getX();
         y = C.getY();
     }
 
-    /**
-     *
-     * @return
+    /**Getter of canMove
+     * Defines when the entity can move
+     * @return an boolean value corresponding to the move state of the entity
      */
-    public boolean CanMove() {
+    public boolean canMove() {
         return canMove;
     }
 
-    /**
-     *
-     * @param canMove
+    /**Setter of canMove
+     * Sets the bolean canMove
+     * @param canMove an boolean value corresponding to the move state of the entity
      */
     public void setCanMove(boolean canMove) {
         this.canMove = canMove;
@@ -311,41 +288,43 @@ public class Entity extends JComponent {
         return Type;
     }
 
-    /**
-     *
-     * @param Type
+    /** Setter of Type
+     * Sets the entity type
+     * @param Type the type to set
      */
     public void setType(EntityType Type) {
         this.Type = Type;
     }
 
-    /**
-     *
-     * @return
+    /** Getter of entity's Coordinate
+     * Returns an Coordinate format of "X" and "Y" values affected by offsets
+     * @return new Coordinate(X, Y)
      */
     public Coordinate getCoord() {
+        //return new Coordinate(x+offsetX, y+offsetY);
         return new Coordinate(x+offsetX, y+offsetY);
     }
 
-    /**
-     *
-     * @param MoveType
+    /** Setter of MoveType
+     * Sets the entity move type
+     * @param MoveType an EntityMoveType to be setted
      */
     public void setMoveType(EntityMoveType MoveType) {
         this.Type.setMoveType(MoveType);
     }
 
-    /**
-     *
-     * @return
+    /** Getter of canRemove
+     * Returns an boolean value corresponding to the actual state of the 
+     * Entity component
+     * @return true if Entity is dead and has no more animations to do, false otherwise 
      */
     public boolean canRemove() {
         return canRemove;
     }
     
-    /**
-     *
-     * @return
+    /** Getter of entity Wall
+     * Returns an Wall corresponding to the entity location
+     * @return new Wall(x, y, x+width, y+height)
      */
     public Wall getWall() {
         return new Wall(x, y, x+width, y+height);

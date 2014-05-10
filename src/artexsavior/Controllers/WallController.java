@@ -29,6 +29,10 @@ public class WallController {
         return areaWalls.remove(indexToRemove);
     }
     
+    public boolean removeWall(Wall wallToRemove) {
+        return areaWalls.remove(wallToRemove);
+    }    
+    
     public boolean canWalk(Coordinate entityCoordinate) {        
         boolean canWalk = true;
         for(int i = 0; i < areaWalls.size(); i++) {            

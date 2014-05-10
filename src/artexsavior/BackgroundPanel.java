@@ -1,4 +1,4 @@
-//<editor-fold defaultstate="collapsed" desc="CODE issues and TODO operations">
+//<editor-fold defaultstate="collapsed" desc="CODE issues and "to do" operations">
 // Write here operations that are missing
 //</editor-fold>
 
@@ -21,7 +21,7 @@ import javax.swing.JPanel;
  *              adicionado ao frame.                                           *
  *******************************************************************************/
 
-public class BackgroundPanel extends JPanel {    
+public class BackgroundPanel extends JPanel implements Constants {    
     private Image backgroundImage;  //Imagem referente ao fundo da área atual
     
     private final int width;        //Comprimento do painel
@@ -45,8 +45,8 @@ public class BackgroundPanel extends JPanel {
      */
     public BackgroundPanel(Image backgroundImage, int width, int height) {
         this.backgroundImage = backgroundImage;
-        this.width = width;
-        this.height = height;
+        this.width = IMAGE_WIDTH;
+        this.height = IMAGE_HEIGHT;
         
         atualize = new Thread(new Runnable() {
 
@@ -64,10 +64,12 @@ public class BackgroundPanel extends JPanel {
             
         }); atualize.start();
     }                 
-
+  
    @Override
-   public void paintComponent(Graphics g) {
+   public void paint(Graphics g) {
+       //g.setClip(-offsetX, 10, width, height);
        g.drawImage(backgroundImage, 0, 0, width, height, offsetX, offsetY, (width+offsetX), (height+offsetY), null);
+       //g.drawImage(backgroundImage, g.getClipBounds().x, 0, null);
    }    
     
     

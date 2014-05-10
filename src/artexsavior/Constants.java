@@ -1,4 +1,4 @@
-//<editor-fold defaultstate="collapsed" desc="CODE issues and TODO operations">
+//<editor-fold defaultstate="collapsed" desc="CODE issues and "to do" operations">
 // Write here operations that are missing
 // TODO add other constants to this interface
 // TODO clean other classes implementing them with Constants

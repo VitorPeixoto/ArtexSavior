@@ -1,0 +1,20 @@
+@startuml
+entity Coordinate
+entity EntityMoveType
+actor Entity
+
+Entity -> MovesController: I'm at "Coordinate" \nand I walk \nlike "EntityMoveType"\nWhere should I go?
+MovesController -> MovesController: Walking like that you\nwill try [Method]
+MovesController -> MapController: Can it do [Method]?
+MapController -> WallController: This position\nhave a wall?
+WallController -> WallController: Checking my\n wallList
+WallController --> MapController: Resṕonse
+note left: Response is an\nCoordinate
+MapController --> MovesController: Response
+MovesController --> Entity: Response
+|||
+
+Coordinate <-> Entity
+EntityMoveType <-> Entity
+
+@enduml

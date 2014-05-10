@@ -8,6 +8,7 @@ import artexsavior.enums.EntityType;
 import artexsavior.Controllers.SkillController;
 import artexsavior.Controllers.MapController;
 import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 
 /** Descrição do Código
  ****************************************************************************
@@ -27,7 +28,11 @@ public class Main implements Constants {
     public static void main(String[] args) {
         JFrame JF = new JFrame();   //Cria o Frame principal
         
+        //JOptionPane.showMessageDialog(null, Main.class.getResource("/Sounds/1.mp3").getPath());
+        
+        //ms.playSound(Main.class.getResource("/Sounds/1.mp3").getPath());
         //Cria instâncias dos controladores/builders necessários                         
+        
         SkillController skillControl = SkillController.newSkillController();
         EntityMap  EntityBuilder = EntityMap.newEntityMap();
         MapController mapControl = MapController.newMapController();
@@ -42,8 +47,9 @@ public class Main implements Constants {
         
         //Define as coordenadas inicias de cada entidade
         Npc.setXY(new Coordinate(200, 200));
-        Friend.setXY(new Coordinate(100, 100));        
-        Enemy.setXY(new Coordinate(100, 200));
+        Friend.setXY(new Coordinate(500, 500));        
+        Enemy.setXY(new Coordinate(100, 100));
+        hero.setXY(new Coordinate(700, 500));
         
         //Seta configurações adicionais
         hero.setFocusable(true);   //Permite leitura do teclado

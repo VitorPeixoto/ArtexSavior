@@ -1,3 +1,7 @@
+//<editor-fold defaultstate="collapsed" desc="CODE issues and "to do" operations">
+// Write here operations that are missing
+//</editor-fold>
+
 package artexsavior;
 
 import artexsavior.entities.Entity;
@@ -16,10 +20,10 @@ import java.util.ArrayList;
  *******************************************************************************/
 
 public class EntityList extends ArrayList<Entity> {
-    //Instância única que será retornada
+    //Single instance that will be returned
     private static volatile EntityList singleList = null;
     
-    //Método estatico que retornará a instância unica
+    //Static method that will return the single instance
     public static EntityList newEntityList() {
         if(singleList == null) {
             singleList = new EntityList();
@@ -27,21 +31,15 @@ public class EntityList extends ArrayList<Entity> {
         return singleList;
     }    
 
-    //Construtor privado que só será chamado uma vez
+    //Private constructor that will be called once
     private EntityList() {}    
     
-    //<editor-fold defaultstate="collapsed" desc="Descrição do método">
-    
-    /************************************************************************ 
-     *   Método que ordena a lista de entidades de modo a deixar juntas     *
-     *   as entidades de cada tipo.                                         *
-     ************************************************************************/
-    
-    //</editor-fold>    
+    /** Void method sortByTypes
+     *  Method that sorts this list of entities by their types.
+     */
     public void sortByTypes() {
         int i = 0;
-        ArrayList<Entity> aux = new ArrayList<>();
-        
+        ArrayList<Entity> aux = new ArrayList<>();        
         while(i != 4) {
             for(Entity E : this) {
                 if(E.getType().equals(EntityType.getType(i)))

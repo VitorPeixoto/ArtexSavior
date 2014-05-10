@@ -1,3 +1,9 @@
+//<editor-fold defaultstate="collapsed" desc="CODE issues and "to do" operations">
+// Write here operations that are missing
+// TODO define more Skills and features
+// TODO solve problem with diagonal movement {Sometimes the key store don't work well}
+//</editor-fold>
+
 package artexsavior.entities;
 
 import artexsavior.Coordinate;
@@ -6,29 +12,38 @@ import artexsavior.enums.EntityType;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 
-/**
- *
- * @author Peixoto
- */
+/** Descrição do Código
+ *******************************************************************************
+ * @classname Hero.java                                                        *
+ * @date      21/04/2014                                                       *   
+ * @authors   Peixoto                                                          *              
+ *                                                                             *   
+ * @description Classe java que extende a classe Entity, e define a entidade   *   
+ *              "Hero", que será controlada pelo jogador.                      *
+ *******************************************************************************/
 
 public class Hero extends Entity {
     private final KeyList Listener;
     private KeyEvent Event1, Event2;
+    /**
+     *
+     */
     public static int MOVEMENT_SPEED = 50;
     
+    /** Construtor of Hero class.
+     * Constructor of an Hero object, builds an Hero
+     */
     public Hero() {        
         super(EntityType.HERO, new SkillType[]{SkillType.ULTIMATE_FIRE_SKILL});
-        //this.width *= 4;
-        //this.height *= 4;
         this.Type = EntityType.HERO;
         this.movementSpeed = MOVEMENT_SPEED;
         Listener = new KeyList();        
         this.addKeyListener(Listener);
-        this.entityImage = this.Type.getEntityImage(Type);
+        this.entityImage = this.Type.getEntityImage(Type);        
     }
     
     @Override
-    protected Coordinate callWalk(EntityType type, Coordinate Coord) {
+    protected Coordinate callWalk(EntityType type, Coordinate Coord) {                
         return movesControl.walk(Type, new Coordinate(x, y), Event1, Event2);    
     }
     
