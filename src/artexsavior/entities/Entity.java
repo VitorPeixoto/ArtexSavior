@@ -130,7 +130,7 @@ public abstract class Entity extends JComponent {
                                     if(canMove) if(++moveIndex >= maxMoveIndex) moveIndex = 0;                                        
                                     hitPoints -= damageControl.requestDamage(new Coordinate(x, y), Type);
                                     if(hitPoints <= 0) die();
-                                    //System.out.println(""+Type+": "+hitPoints);
+                                    System.out.println(""+Type+": "+hitPoints);
                                 }    
                             }
                         } catch (NullPointerException npe) {
@@ -230,7 +230,7 @@ public abstract class Entity extends JComponent {
                     if(skillTypes.get(i).canCast()) {
                         //canMove = false;
                         Coordinate skillCoord = facingTo.getCoordinatePlus(new Coordinate(x, y), 100);
-                        performSkill(skillToPerform, skillCoord.getX()-(width/2)+offsetX, skillCoord.getY()-(height/2)+offsetY);
+                        performSkill(skillToPerform, skillCoord.getX()-(skillToPerform.getSkillWidth()/2)+offsetX, skillCoord.getY()-(skillToPerform.getSkillHeight()/2)+offsetY);
                         //delayOfSkill = SkillController.newSkillController().getTimeToWait(skillToPerform);
                         skillTypes.get(i).cast();
                     }    

@@ -4,10 +4,13 @@
 
 package artexsavior.Controllers;
 
+import artexsavior.Constants;
 import artexsavior.Damage;
 import artexsavior.enums.EntityType;
 import java.util.ArrayList;
 import artexsavior.Coordinate;
+import java.awt.Graphics;
+import javax.swing.JComponent;
 
 /** Descrição do Código
  *******************************************************************************
@@ -19,7 +22,7 @@ import artexsavior.Coordinate;
  *              definindo sua localização, seu valor e seus alvos.             *
  *******************************************************************************/
 
-public class DamageController {
+public class DamageController implements Constants {
     //Instância única que será retornada
     private static volatile DamageController singleDamage = null;    
     
@@ -77,7 +80,7 @@ public class DamageController {
      */
     public synchronized void changeByOffset(int OffsetX, int OffsetY) {
         this.offsetX = OffsetX;
-        this.offsetY = OffsetY;                
+        this.offsetY = OffsetY;         
     }
     
     /**

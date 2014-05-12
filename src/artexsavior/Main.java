@@ -1,5 +1,6 @@
 package artexsavior;
 
+import artexsavior.Controllers.DamageController;
 import artexsavior.entities.Hero;
 import artexsavior.entities.Enemy;
 import artexsavior.entities.NPC;
@@ -36,6 +37,7 @@ public class Main implements Constants {
         SkillController skillControl = SkillController.newSkillController();
         EntityMap  EntityBuilder = EntityMap.newEntityMap();
         MapController mapControl = MapController.newMapController();
+        DamageController damageControl = DamageController.newDamageController();
         
         //Cria as entidades desejadas à partir do builder EntytyBuilder
         Hero hero = (Hero) EntityBuilder.newEntity(EntityType.HERO);
@@ -62,7 +64,7 @@ public class Main implements Constants {
         JF.add(Friend);
         JF.add(Enemy);
         JF.add(Npc);
-        JF.add(background);
+        JF.add(background);        
         
         //Seta o tamanho do Frame principal
         JF.setSize(SCREEN_WIDTH, SCREEN_HEIGHT);

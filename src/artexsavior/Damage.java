@@ -4,7 +4,11 @@
 
 package artexsavior;
 
+import artexsavior.Controllers.DamageController;
 import artexsavior.enums.EntityType;
+import java.awt.Color;
+import java.awt.Graphics;
+import javax.swing.JComponent;
 
 /** Descrição do Código
  *******************************************************************************
@@ -77,6 +81,5 @@ public class Damage {
         else return (((entityCoordinate.getX() >= initialCoordinate.getX()) && (entityCoordinate.getX() <= finalCoordinate.getX())) &&
                      ((entityCoordinate.getY() >= initialCoordinate.getY()) && (entityCoordinate.getY() <= finalCoordinate.getY())));
     }
-    
-    
+        
 }
