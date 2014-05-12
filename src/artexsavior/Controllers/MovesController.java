@@ -409,15 +409,14 @@ public class MovesController {
             if(Event.getKeyCode() == KeyEvent.VK_RIGHT) {
                 toOffset = new Coordinate(10, 0);
                 movedTo = Direction.EAST;
-                return MapControl.addOffset(toOffset);
             }
             else if(Event.getKeyCode() == (KeyEvent.VK_LEFT)) {
                 toOffset = new Coordinate(-10, 0);
                 movedTo = Direction.WEST;
-                return MapControl.addOffset(toOffset);
-            }            
+            }
+            return MapControl.addOffset(toOffset);
         }
-        if(Coord.getY() >= 290 && Coord.getY() <= 310) {
+        else if(Coord.getY() >= 290 && Coord.getY() <= 310) {
             if(Event.getKeyCode() == (KeyEvent.VK_UP)) {
                 toOffset = new Coordinate(0, -10);
                 movedTo = Direction.NORTH;
