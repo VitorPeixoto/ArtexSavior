@@ -157,7 +157,7 @@ public enum Direction {
             case SOUTHEAST:    
                 return new Coordinate(actualCoordinate.getX()+(toAdd/2), actualCoordinate.getY()+(toAdd/2));
             case SOUTH:
-                return new Coordinate(actualCoordinate.getX(), actualCoordinate.getY()+ toAdd);
+                return new Coordinate(actualCoordinate.getX(), actualCoordinate.getY()+toAdd);
             case EAST:
                 return new Coordinate(actualCoordinate.getX()+toAdd, actualCoordinate.getY());
             default:

@@ -7,6 +7,9 @@ import artexsavior.enums.EntityType;
 import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.locks.Condition;
+import java.util.concurrent.locks.Lock;
 
 /** Descrição do Código
  *******************************************************************************
@@ -77,7 +80,7 @@ public class MovesController {
      ************************************************************************/
     
     //</editor-fold>
-    public Coordinate walk(EntityType Type, Coordinate Coord) {
+    public Coordinate walk(EntityType Type, Coordinate Coord) {        
         switch(Type.getMoveType()) {
             case STATIC:
                 break;
@@ -164,7 +167,7 @@ public class MovesController {
                 
                 if(middleOfScreen(Coord, Event)) {
                     offsetX = MapControl.getOffsetX();
-                    offsetY = MapControl.getOffsetY();
+                    offsetY = MapControl.getOffsetY();                    
                     return (MapControl.canWalk(Coord) ? Coord : CoordCopy);
                 }
                 else if(Event.getKeyCode() == KeyEvent.VK_LEFT) {
@@ -380,21 +383,21 @@ public class MovesController {
     //TODO cleanAndFIXTHIS   
     private Direction changeDirectionToUnit(Coordinate Entity, Coordinate Unit) {
         if(Entity.getX() >= (Unit.getX() - 30) && Entity.getX() <= (Unit.getX() + 30))
-            movedTo = ((Entity.getY() > Unit.getY()) ? Direction.NORTH : Direction.SOUTH);
+            movedTo = ((Entity.getY() > Unit.getY()) ? Direction.SOUTH : Direction.NORTH);
         else if(Entity.getY() >= (Unit.getY() - 30) && Entity.getY() <= (Unit.getY() + 30))
-            movedTo = ((Entity.getX() > Unit.getX()) ? Direction.WEST : Direction.EAST);
+            movedTo = ((Entity.getX() > Unit.getX()) ? Direction.EAST : Direction.WEST);
         else {
             if(Entity.getX() > Unit.getX()) {
-                movedTo = Direction.WEST;
-            }
-            else {
                 movedTo = Direction.EAST;
             }
+            else {
+                movedTo = Direction.WEST;
+            }
             if(Entity.getY() < Unit.getY()) {
-                movedTo = movedTo.addDirection(Direction.SOUTH);
+                movedTo = movedTo.addDirection(Direction.NORTH);
             }                        
             else {
-                movedTo = movedTo.addDirection(Direction.NORTH);
+                movedTo = movedTo.addDirection(Direction.SOUTH);
             }
         }
         return movedTo;        
@@ -403,13 +406,25 @@ public class MovesController {
     private boolean middleOfScreen(Coordinate Coord, KeyEvent Event) {
         Coordinate toOffset = new Coordinate(0, 0);
         if(Coord.getX() >= 490 && Coord.getX() <= 510) {
-            if(Event.getKeyCode() == KeyEvent.VK_RIGHT) toOffset = new Coordinate(10, 0);
-            else if(Event.getKeyCode() == (KeyEvent.VK_LEFT)) toOffset = new Coordinate(-10, 0);
+            if(Event.getKeyCode() == KeyEvent.VK_RIGHT) {
+                toOffset = new Coordinate(10, 0);
+                movedTo = Direction.EAST;
+            }
+            else if(Event.getKeyCode() == (KeyEvent.VK_LEFT)) {
+                toOffset = new Coordinate(-10, 0);
+                movedTo = Direction.WEST;
+            }
             return MapControl.addOffset(toOffset);
         }
         else if(Coord.getY() >= 290 && Coord.getY() <= 310) {
-            if(Event.getKeyCode() == (KeyEvent.VK_UP)) toOffset = new Coordinate(0, -10);
-            else if(Event.getKeyCode() == (KeyEvent.VK_DOWN)) toOffset = new Coordinate(0, 10);
+            if(Event.getKeyCode() == (KeyEvent.VK_UP)) {
+                toOffset = new Coordinate(0, -10);
+                movedTo = Direction.NORTH;
+            }
+            else if(Event.getKeyCode() == (KeyEvent.VK_DOWN)) {
+                toOffset = new Coordinate(0, 10);
+                movedTo = Direction.SOUTH;
+            }
             return MapControl.addOffset(toOffset);
         }
         else return false;

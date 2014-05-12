@@ -48,8 +48,8 @@ public class Main implements Constants {
         //Define as coordenadas inicias de cada entidade
         Npc.setXY(new Coordinate(200, 200));
         Friend.setXY(new Coordinate(500, 500));        
-        Enemy.setXY(new Coordinate(100, 100));
-        hero.setXY(new Coordinate(700, 500));
+        Enemy.setXY(new Coordinate(700, 500));
+        hero.setXY(new Coordinate(100, 100));
         
         //Seta configurações adicionais
         hero.setFocusable(true);   //Permite leitura do teclado

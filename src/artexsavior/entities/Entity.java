@@ -53,7 +53,7 @@ public abstract class Entity extends JComponent {
     protected DamageController damageControl;
     protected WallController wallControl;
     
-    protected int movementSpeed = 200;
+    protected int movementSpeed = 100;
 
     //Direction that the entity is looking at
     protected Direction facingTo;
@@ -85,7 +85,6 @@ public abstract class Entity extends JComponent {
                       canMove = true,
     //Active when the game pauses
                       paused = false;
-    //</editor-fold>
 
     //Thread that controls the movement and changes of the entity
     protected Thread movement;
@@ -126,16 +125,12 @@ public abstract class Entity extends JComponent {
                         try {
                             synchronized (Entity.this) {
                                 if(!dead) {
-                                    if(canMove) {
-                                        //wallControl.removeWall(Entity.this.getWall());
-                                        walk(callWalk(Type, new Coordinate(x, y)));
-                                        //wallControl.addWall(Entity.this.getWall());
-                                        if(++moveIndex >= maxMoveIndex) moveIndex = 0;
-                                    }
+                                    walk(callWalk(Type, new Coordinate(x, y)));
                                     facingTo = movesControl.getDirection();
+                                    if(canMove) if(++moveIndex >= maxMoveIndex) moveIndex = 0;                                        
                                     hitPoints -= damageControl.requestDamage(new Coordinate(x, y), Type);
                                     if(hitPoints <= 0) die();
-                                    System.out.println(""+Type+": "+hitPoints);
+                                    //System.out.println(""+Type+": "+hitPoints);
                                 }    
                             }
                         } catch (NullPointerException npe) {
@@ -173,7 +168,7 @@ public abstract class Entity extends JComponent {
     protected Coordinate callWalk(EntityType type, Coordinate Coord) {
         offsetX = (movesControl.getOffsetX()*-1);
         offsetY = (movesControl.getOffsetY()*-1);
-        return movesControl.walk(Type, new Coordinate(x, y));
+        return (canMove ? movesControl.walk(Type, new Coordinate(x, y)) : new Coordinate(x, y));
     }
     
     /**
@@ -235,7 +230,7 @@ public abstract class Entity extends JComponent {
                     if(skillTypes.get(i).canCast()) {
                         //canMove = false;
                         Coordinate skillCoord = facingTo.getCoordinatePlus(new Coordinate(x, y), 100);
-                        performSkill(skillToPerform, skillCoord.getX()-(width/2), skillCoord.getY()-(height/2));
+                        performSkill(skillToPerform, skillCoord.getX()-(width/2)+offsetX, skillCoord.getY()-(height/2)+offsetY);
                         //delayOfSkill = SkillController.newSkillController().getTimeToWait(skillToPerform);
                         skillTypes.get(i).cast();
                     }    
@@ -301,7 +296,6 @@ public abstract class Entity extends JComponent {
      * @return new Coordinate(X, Y)
      */
     public Coordinate getCoord() {
-        //return new Coordinate(x+offsetX, y+offsetY);
         return new Coordinate(x+offsetX, y+offsetY);
     }
 
