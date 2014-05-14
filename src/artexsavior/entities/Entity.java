@@ -11,17 +11,19 @@
 
 package artexsavior.entities;
 
-import artexsavior.enums.SkillType;
-import artexsavior.enums.EntityType;
-import artexsavior.enums.Direction;
-import artexsavior.enums.EntityMoveType;
-import artexsavior.Controllers.SkillController;
-import artexsavior.Controllers.MovesController;
+import artexsavior.Bar;
 import artexsavior.Controllers.DamageController;
+import artexsavior.Controllers.MovesController;
+import artexsavior.Controllers.SkillController;
 import artexsavior.Controllers.WallController;
 import artexsavior.Coordinate;
 import artexsavior.Skill;
 import artexsavior.Wall;
+import artexsavior.enums.Direction;
+import artexsavior.enums.EntityMoveType;
+import artexsavior.enums.EntityType;
+import artexsavior.enums.SkillType;
+import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Image;
 import java.util.ArrayList;
@@ -67,9 +69,10 @@ public abstract class Entity extends JComponent {
     //An ArrayList containing all Skills that this Entity can cast
     protected ArrayList<SkillType> skillTypes;
 
-    //The entity's Life
+    //The entity's Life and Mana
     protected int hitPoints = 100;
-
+    protected int manaPoints = 100;
+    
     //Used when the entity dies
     protected int numOfBlinks = 0;
 
@@ -96,6 +99,9 @@ public abstract class Entity extends JComponent {
     protected int offsetX,
     //The "Y" offset on the map
                   offsetY;
+    
+    
+    private Bar healthBar, manaBar;
 
     /**
      * Construtor of Entity class
@@ -114,6 +120,15 @@ public abstract class Entity extends JComponent {
         
         skillTypes = new ArrayList<>();
         
+        healthBar = new Bar(hitPoints, hitPoints, Color.red);
+        manaBar = new Bar(100, 100, Color.blue);
+        
+        setLayout(null);
+        this.add(healthBar);
+        healthBar.setBounds(0, 0, width, 5);
+        this.add(manaBar);
+        manaBar.setBounds(x, y, width, 5);
+        
         if(Types != null) Collections.addAll(skillTypes, Types);               
         
         this.movement = new Thread(new Runnable() {
@@ -130,7 +145,17 @@ public abstract class Entity extends JComponent {
                                     if(canMove) if(++moveIndex >= maxMoveIndex) moveIndex = 0;                                        
                                     hitPoints -= damageControl.requestDamage(new Coordinate(x, y), Type);
                                     if(hitPoints <= 0) die();
-                                    System.out.println(""+Type+": "+hitPoints);
+                                    //if(manaPoints < 100) manaPoints++;
+                                    if(Type.equals(EntityType.HERO)) {
+                                        healthBar.setBounds(x, y-10, width, 5);
+                                        manaBar.setBounds(x, y-5, width, 5);
+                                    }
+                                    else {
+                                        healthBar.setBounds(x+offsetX, y-10+offsetY, width, 5);
+                                        manaBar.setBounds(x+offsetX, y-5+offsetY, width, 5);
+                                    }
+                                    healthBar.setValue(100-hitPoints);                                    
+                                    manaBar.setValue(100-manaPoints);
                                 }    
                             }
                         } catch (NullPointerException npe) {
@@ -207,8 +232,9 @@ public abstract class Entity extends JComponent {
         if(skillTypes.contains(skillToPerform)) {            
             for(int i = 0; i < skillTypes.size(); i++) {
                 if(skillTypes.get(i).equals(skillToPerform)) {
-                    if(skillTypes.get(i).canCast()) {
+                    if(skillTypes.get(i).canCast(manaPoints)) {
                         //canMove = false;
+                        manaPoints -= skillToPerform.getManaCost();
                         SkillController.newSkillController().paintSkill(new Skill(skillToPerform, x, y), Type);
                         //delayOfSkill = SkillController.newSkillController().getTimeToWait(skillToPerform);
                         skillTypes.get(i).cast();
@@ -227,7 +253,7 @@ public abstract class Entity extends JComponent {
         if(skillTypes.contains(skillToPerform)) {            
             for(int i = 0; i < skillTypes.size(); i++) {
                 if(skillTypes.get(i).equals(skillToPerform)) {
-                    if(skillTypes.get(i).canCast()) {
+                    if(skillTypes.get(i).canCast(manaPoints)) {
                         //canMove = false;
                         Coordinate skillCoord = facingTo.getCoordinatePlus(new Coordinate(x, y), 100);
                         performSkill(skillToPerform, skillCoord.getX()-(skillToPerform.getSkillWidth()/2)+offsetX, skillCoord.getY()-(skillToPerform.getSkillHeight()/2)+offsetY);

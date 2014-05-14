@@ -10,13 +10,14 @@ import java.util.logging.Logger;
  */
 
 public enum SkillType {
-    FIRE_SKILL(0,  6, 150, 60, 60, 30, new int[] {1,1,1,1,1,1}),
-    DARK_SKILL(1, 25, 50, 60, 60, 30, new int[] {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1}),
-    ULTIMATE_DARK_SKILL(2, 25, 50, 100, 100, 60, new int[] {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1}),
-    ULTIMATE_FIRE_SKILL(3, 24, 100, 100, 100, 5, new int[] {1,2,3,4,5,6,7,8,9,10,10,10,10,10,10,10,9,8,7,6,5,4,3,2,1});
+    FIRE_SKILL(0, 10, 6, 150, 60, 60, 30, new int[] {1,1,1,1,1,1}),
+    DARK_SKILL(1, 10, 25, 50, 60, 60, 30, new int[] {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1}),
+    ULTIMATE_DARK_SKILL(2, 50, 25, 50, 100, 100, 60, new int[] {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1}),
+    ULTIMATE_FIRE_SKILL(3, 50, 24, 100, 100, 100, 5, new int[] {1,2,3,4,5,6,7,8,9,10,10,10,10,10,10,10,9,8,7,6,5,4,3,2,1});
     
-    private SkillType(int id, int numberOfSteps, int delayBySteps, int skillWidth, int skillHeight, int skillCooldown, int[] damageByHit) {
+    private SkillType(int id, int manaCost, int numberOfSteps, int delayBySteps, int skillWidth, int skillHeight, int skillCooldown, int[] damageByHit) {
         this.id = id;
+        this.manaCost = manaCost; 
         this.numberOfSteps = numberOfSteps;
         this.delayBySteps = delayBySteps;
         this.skillWidth = skillWidth;        
@@ -26,12 +27,13 @@ public enum SkillType {
     }
     
     private final int id,
-                numberOfSteps,
-                delayBySteps,
-                skillWidth,
-                skillHeight,
-                skillCooldown,
-                damageByHit[];
+                      manaCost,
+                      numberOfSteps,
+                      delayBySteps,
+                      skillWidth,
+                      skillHeight,
+                      skillCooldown,
+                      damageByHit[];
     
     private int actualCooldown;
     private final String name = this.toString();
@@ -77,9 +79,13 @@ public enum SkillType {
         return delayBySteps;
     }
     
-    public boolean canCast() {
-        return (actualCooldown == 0);
+    public boolean canCast(int actualManaPoints) {
+        return (actualCooldown == 0) && (actualManaPoints >= manaCost);
     }
+
+    public int getManaCost() {
+        return manaCost;
+    }    
     
     public void startCountdown() {
         countdown = new Thread(new Runnable() {        
