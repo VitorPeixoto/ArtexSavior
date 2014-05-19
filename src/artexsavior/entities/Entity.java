@@ -145,7 +145,7 @@ public abstract class Entity extends JComponent {
                                     if(canMove) if(++moveIndex >= maxMoveIndex) moveIndex = 0;                                        
                                     hitPoints -= damageControl.requestDamage(new Coordinate(x, y), Type);
                                     if(hitPoints <= 0) die();
-                                    //if(manaPoints < 100) manaPoints++;
+                                    if(manaPoints < 100) manaPoints++;
                                     if(Type.equals(EntityType.HERO)) {
                                         healthBar.setBounds(x, y-10, width, 5);
                                         manaBar.setBounds(x, y-5, width, 5);
@@ -273,6 +273,7 @@ public abstract class Entity extends JComponent {
         this.entityImage = Type.getEntityDeathImage(Type);
         this.maxMoveIndex = 2;
         this.movementSpeed *= 3;
+        this.removeAll();
         dead = true;
     }
     

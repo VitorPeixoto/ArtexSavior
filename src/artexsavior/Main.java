@@ -29,9 +29,6 @@ public class Main implements Constants {
     public static void main(String[] args) {
         JFrame JF = new JFrame();   //Cria o Frame principal
         
-        //JOptionPane.showMessageDialog(null, Main.class.getResource("/Sounds/1.mp3").getPath());
-        
-        //ms.playSound(Main.class.getResource("/Sounds/1.mp3").getPath());
         //Cria instâncias dos controladores/builders necessários                         
         
         SkillController skillControl = SkillController.newSkillController();
