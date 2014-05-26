@@ -1,15 +1,11 @@
 package artexsavior;
 
-import artexsavior.Controllers.DamageController;
-import artexsavior.entities.Hero;
-import artexsavior.entities.Enemy;
-import artexsavior.entities.NPC;
-import artexsavior.entities.Friend;
-import artexsavior.enums.EntityType;
-import artexsavior.Controllers.SkillController;
-import artexsavior.Controllers.MapController;
-import javax.swing.JFrame;
-import javax.swing.JOptionPane;
+import java.awt.Dimension;
+import java.awt.Toolkit;
+import org.newdawn.slick.AppGameContainer;
+import org.newdawn.slick.GameContainer;
+import org.newdawn.slick.SlickException;
+import org.newdawn.slick.state.StateBasedGame;
 
 /** Descrição do Código
  ****************************************************************************
@@ -21,67 +17,35 @@ import javax.swing.JOptionPane;
  *              configurações inicias dos objetos e do Frame principal.
  *****************************************************************************/
 
-public class Main implements Constants {
+public class Main extends StateBasedGame implements Constants {
     
     /**
      * @param args the command line arguments
      */
-    public static void main(String[] args) {
-        JFrame JF = new JFrame();   //Cria o Frame principal
+    public static void main(String[] args) throws SlickException {
+        AppGameContainer app = new AppGameContainer(new Main("Artex Savior"));
+        Toolkit toolkit = Toolkit.getDefaultToolkit();        
+	                
+        Dimension dimension = toolkit.getScreenSize();
         
-        //Cria instâncias dos controladores/builders necessários                         
+        //app.setDisplayMode(dimension.width, dimension.height, false);
+        app.setDisplayMode(SCREEN_WIDTH, SCREEN_HEIGHT, false);
         
-        SkillController skillControl = SkillController.newSkillController();
-        EntityMap  EntityBuilder = EntityMap.newEntityMap();
-        MapController mapControl = MapController.newMapController();
-        DamageController damageControl = DamageController.newDamageController();
-        
-        //Cria as entidades desejadas à partir do builder EntytyBuilder
-        Hero hero = (Hero) EntityBuilder.newEntity(EntityType.HERO);
-        Friend Friend = (Friend) EntityBuilder.newEntity(EntityType.FRIEND);
-        Enemy Enemy = (Enemy) EntityBuilder.newEntity(EntityType.ENEMY);
-        NPC Npc = (NPC) EntityBuilder.newEntity(EntityType.NPC);
-        BackgroundPanel background = mapControl.getBackgroundPanel();
-        BackgroundPanel upperground = mapControl.getUppergroundPanel();
-        
-        //Define as coordenadas inicias de cada entidade
-        Npc.setXY(new Coordinate(200, 200));
-        Friend.setXY(new Coordinate(500, 500));        
-        Enemy.setXY(new Coordinate(700, 500));
-        hero.setXY(new Coordinate(100, 100));
-        
-        //Seta configurações adicionais
-        hero.setFocusable(true);   //Permite leitura do teclado
-        hero.MOVEMENT_SPEED = 50;
-        
-        //Adiciona componentes no Frame principal
-        JF.add(skillControl);
-        JF.add(upperground);
-        JF.add(hero);
-        JF.add(Friend);
-        JF.add(Enemy);
-        JF.add(Npc);
-        JF.add(background);        
-        
-        //Seta o tamanho do Frame principal
-        JF.setSize(SCREEN_WIDTH, SCREEN_HEIGHT);
-
-        //Seta o tamanho dos componentes dentro do Frame principal
-        upperground.setBounds(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
-        skillControl.setBounds(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
-        hero.setBounds(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
-        Friend.setBounds(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
-        Enemy.setBounds(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
-        Npc.setBounds(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);                
-        background.setBounds(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
-        
-        //Seta configurações adicionais
-        JF.setDefaultCloseOperation(3);
-        JF.setVisible(true);
-        
-        //Faz as entidades desejadas castarem algum spell definido
-        //Enemy.performSkill(SkillType.FIRE_SKILL);
-        //Friend.performSkill(SkillType.DARK_SKILL);                
+        app.setVSync(true);	
+        app.setShowFPS(true);
+	app.setAlwaysRender(true);        
+        app.start();
     }    
+
+    public Main(String name) {
+        super(name);
+        
+        this.addState(new Game(0x0));
+        this.enterState(0x0);
+        
+    }
+
+    @Override
+    public void initStatesList(GameContainer gc) throws SlickException {}
     
 }

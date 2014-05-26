@@ -23,14 +23,15 @@ import artexsavior.enums.Direction;
 import artexsavior.enums.EntityMoveType;
 import artexsavior.enums.EntityType;
 import artexsavior.enums.SkillType;
-import java.awt.Color;
-import java.awt.Graphics;
-import java.awt.Image;
+import java.awt.Rectangle;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.swing.JComponent;
+import org.newdawn.slick.Color;
+import org.newdawn.slick.Graphics;
+import org.newdawn.slick.Image;
+import org.newdawn.slick.SlickException;
 
 /** Descrição do Código
  *******************************************************************************
@@ -42,7 +43,7 @@ import javax.swing.JComponent;
  *              no jogo, e será herdada pelas entidades específicas.           *
  *******************************************************************************/
 
-public abstract class Entity extends JComponent {
+public abstract class Entity {
     protected int x = 20,      //The "X" position on the map
                   y = 20,      //The "Y" position on the map
                   height = 32, //The image height
@@ -99,9 +100,8 @@ public abstract class Entity extends JComponent {
     protected int offsetX,
     //The "Y" offset on the map
                   offsetY;
-    
-    
-    private Bar healthBar, manaBar;
+        
+    protected Bar healthBar, manaBar;
 
     /**
      * Construtor of Entity class
@@ -109,7 +109,7 @@ public abstract class Entity extends JComponent {
      * @param type The type of the entity that will be created
      * @param Types An array of skills that the entity can perform
      */
-    public Entity(EntityType type, SkillType[] Types) {
+    public Entity(EntityType type, SkillType[] Types) throws SlickException {
         movesControl = MovesController.newMovesController();
         damageControl = DamageController.newDamageController();
         wallControl = WallController.newWallController();
@@ -120,16 +120,10 @@ public abstract class Entity extends JComponent {
         
         skillTypes = new ArrayList<>();
         
-        healthBar = new Bar(hitPoints, hitPoints, Color.red);
-        manaBar = new Bar(100, 100, Color.blue);
+        healthBar = new Bar(hitPoints, hitPoints, Color.red, new Rectangle(x, y-10, width, 5));
+        manaBar = new Bar(100, 100, Color.blue, new Rectangle(x, y-5, width, 5));
         
-        setLayout(null);
-        this.add(healthBar);
-        healthBar.setBounds(0, 0, width, 5);
-        this.add(manaBar);
-        manaBar.setBounds(x, y, width, 5);
-        
-        if(Types != null) Collections.addAll(skillTypes, Types);               
+        if(Types != null) Collections.addAll(skillTypes, Types);                       
         
         this.movement = new Thread(new Runnable() {
             
@@ -144,7 +138,11 @@ public abstract class Entity extends JComponent {
                                     facingTo = movesControl.getDirection();
                                     if(canMove) if(++moveIndex >= maxMoveIndex) moveIndex = 0;                                        
                                     hitPoints -= damageControl.requestDamage(new Coordinate(x, y), Type);
-                                    if(hitPoints <= 0) die();
+                                    if(hitPoints <= 0) try {
+                                        die();
+                                    } catch (SlickException ex) {
+                                        Logger.getLogger(Entity.class.getName()).log(Level.SEVERE, null, ex);
+                                    }
                                     if(manaPoints < 100) manaPoints++;
                                     if(Type.equals(EntityType.HERO)) {
                                         healthBar.setBounds(x, y-10, width, 5);
@@ -154,8 +152,8 @@ public abstract class Entity extends JComponent {
                                         healthBar.setBounds(x+offsetX, y-10+offsetY, width, 5);
                                         manaBar.setBounds(x+offsetX, y-5+offsetY, width, 5);
                                     }
-                                    healthBar.setValue(100-hitPoints);                                    
-                                    manaBar.setValue(100-manaPoints);
+                                    healthBar.setValue(hitPoints);                                    
+                                    manaBar.setValue(manaPoints);
                                 }    
                             }
                         } catch (NullPointerException npe) {
@@ -169,7 +167,7 @@ public abstract class Entity extends JComponent {
                             blink = !blink; 
                             numOfBlinks++;
                         }
-                        repaint();
+                        //repaint();
                         Thread.sleep(movementSpeed);
                     }
                 } catch (InterruptedException ex) {
@@ -207,17 +205,18 @@ public abstract class Entity extends JComponent {
         y = walk.getY();
     }
     
-    @Override
-    public void paintComponent(Graphics g) {        
+    public void draw(Graphics g) {
         if(!dead)
-            g.drawImage(this.entityImage, x+offsetX, y+offsetY, x+offsetX+width, y+offsetY+height, (this.moveIndex*width), ((this.facingTo.integer()*height)), ((this.moveIndex*width)+width), ((this.facingTo.integer()*height)+height), this);
+            entityImage.draw(x+offsetX, y+offsetY, x+offsetX+width, y+offsetY+height, (this.moveIndex*width), ((this.facingTo.integer()*height)), ((this.moveIndex*width)+width), ((this.facingTo.integer()*height)+height));        
         else if(numOfBlinks < 10){ //FIXME
             if(blink)
-                g.drawImage(this.entityImage, x+offsetX, y+offsetY, x+offsetX+width, y+offsetY+height, (this.moveIndex*32), (0), ((this.moveIndex*32)+32), (height), this);
+                entityImage.draw(x+offsetX, y+offsetY, x+offsetX+width, y+offsetY+height, (this.moveIndex*32), (0), ((this.moveIndex*32)+32), (height));
         }            
         else {
             canRemove = true;
         }
+        healthBar.render(g);
+        manaBar.render(g);
     }
     
     /**
@@ -269,11 +268,10 @@ public abstract class Entity extends JComponent {
      *  Method that perform necessary checks and changes before an entity 
      *  can die.
      */
-    public void die() {
+    public void die() throws SlickException {
         this.entityImage = Type.getEntityDeathImage(Type);
         this.maxMoveIndex = 2;
         this.movementSpeed *= 3;
-        this.removeAll();
         dead = true;
     }
     
@@ -350,5 +348,5 @@ public abstract class Entity extends JComponent {
     public Wall getWall() {
         return new Wall(x, y, x+width, y+height);
     }
-
+    
 }
